@@ -4,46 +4,48 @@
 #include <iostream>
 #include <locale>
 
-using namespace std;
+
 int main()
 {   
     setlocale(LC_ALL, "RUSSIAN");
     int number;
-    double number2;
-    double number3;
+    int number2;
+    int number3;
     
-    cout << "char c1 = 'A'; от -128 до 127 " <<  sizeof(char) << " байт\n"
-        << "unsigned char c2 = 'A'; до 0 до 255 " << sizeof(unsigned char) << " байт\n"
-        << "short s1 = -30000; от - 32768 до 37767 "<< sizeof(short)<< " байта\n"
-        << "unsigned short 60000; = 1 0 до 65535 "<< sizeof(unsigned short) <<" байта; \n"
-        << "int i1; = 1000000 от -2147483648 до 2147483647 "<< sizeof (int)<<" байта\n"
-        << "unsigned int i2 = 4000000; от 0 до 4294967295 "<< sizeof(unsigned int) <<" байта\n"
-        << "long long ll1 = 2000000; от -9223372036854775808 до 9223372036854775807 "<< sizeof(long long) <<" байтов\n"
-        << "unsigned long long = 1; от 0 до 18446744073709551615 "<< sizeof(unsigned long long) << " байтов\n"
-        << "float f = 3.141444f; примерно от 3,4E–38 до 3,4E+38 "<< sizeof(float) <<" байта\n"
-        << "double f2 = 3.1343545444f; примерно от 1,7E–308 до 1,7E+308 "<< sizeof(double) <<" байтов\n"
-        << "bool b = true; false = 0 true = любое кроме 0 true/false "<< sizeof(bool) <<" байт\n"<< endl;
-    cout << "введите значение с клавиатуры: ";
+    std::cout << "char c1 = 'A'; от "<<CHAR_MIN <<" до "<<CHAR_MAX <<" " << sizeof(char) << " байт\n"
+        << "unsigned char c2 = 'A'; от 0 до "<<UCHAR_MAX << " " << sizeof(unsigned char) << " байт\n"
+        << "short s1 = -30000; от "<<SHRT_MIN << " до "<< SHRT_MAX<< " "<< sizeof(short)<< " байта\n"
+        << "unsigned short 60000; = 1 0 до "<<USHRT_MAX <<" "<< sizeof(unsigned short) <<" байта\n"
+        << "int i1; = 1000000 от "<< INT_MIN<<" до "<<INT_MAX << sizeof (int)<< " байта\n"
+        << "unsigned int i2 = 4000000; от 0 до " << UINT_MAX << " " << sizeof(unsigned int) << " байта\n"
+        << "long long ll1 = 2000000; от "<<LLONG_MIN <<" до "<<LLONG_MAX <<" "<< sizeof(long long) <<" байтов\n"
+        << "unsigned long long = 1; от 0 до "<<ULLONG_MAX <<" "<< sizeof(unsigned long long) << " байтов\n"
+        << "float f = 3.141444f; примерно от "<<FLT_MIN <<" до "<<FLT_MAX <<" "<< sizeof(float) <<" байта\n"
+        << "double f2 = 3.1343545444f; примерно от "<<DBL_MIN <<" до "<<DBL_MAX <<" "<< sizeof(double) <<" байтов\n"
+        << "bool b = true; false = 0 true = любое кроме 0 true/false "<< sizeof(bool) <<" байт\n"<< std::endl;
+    std::cout << "введите значение с клавиатуры: ";
         
-    cin >> number;
+    std::cin >> number;
     int del_0 = number / 4;
     int sum_0 = number + 4;
     int raz_0 = number - 4;
     int um_0 = number * 4;
-    cout << "\n";
-    cout << "ваше значение: " << number << endl;
-    cout << "новые значения: " << sum_0 <<  " " << raz_0 << " "<< um_0 << " " << del_0 <<endl;
-    cout << "доп введите 2 числа: ";
-    cin >> number2 >> number3;
-    double del = number2 / number3;
+    std::cout << "\n";
+    std::cout << "ваше значение: " << number << std::endl;
+    std::cout << "новые значения: " << sum_0 <<  " " << raz_0 << " "<< um_0 << " " << del_0 << std::endl;
+    std::cout << "доп введите 2 числа: ";
+    std::cin >> number2 >> number3;
+    double number4 = number2;
+    double number5 = number3;
+    double del = number4 / number5;
     int del_int = number2 / number3;
     int sum = number2 + number3;
     int raz = number2 - number3;
     int um = number2 * number3;
-    cout << "сложение - " << sum << "\n"
+    std::cout << "сложение - " << sum << "\n"
         << "вычитание - " << raz << "\n"
         << "умножение - " << um << "\n"
-        << "деление int - " << del_int << " деление double - " << del << endl;
+        << "деление int - " << del_int << " деление double - " << del << std::endl;
 
     return 0;
 }
