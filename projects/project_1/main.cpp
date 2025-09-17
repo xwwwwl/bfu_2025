@@ -26,17 +26,24 @@ int main()
     cout << "введите значение с клавиатуры: ";
         
     cin >> number;
+    int del_0 = number / 4;
+    int sum_0 = number + 4;
+    int raz_0 = number - 4;
+    int um_0 = number * 4;
     cout << "\n";
     cout << "ваше значение: " << number << endl;
-    cout << "новые значения: " << number+4 <<  " " << number - 4 << " "<<  number * 4 << " " << number / 4<<endl;
+    cout << "новые значения: " << sum_0 <<  " " << raz_0 << " "<< um_0 << " " << del_0 <<endl;
     cout << "доп введите 2 числа: ";
     cin >> number2 >> number3;
-    double delenie = number2 / number3;
-    int delenie_int = number2 / number3;
-    cout << "сложение - " << number2 + number3 << "\n"
-        << "вычитание - " << number2 - number3 << "\n"
-        << "умножение - " << number2 * number3 << "\n"
-        << "деление int - " << delenie_int << " деление double - " << delenie << endl;
+    double del = number2 / number3;
+    int del_int = number2 / number3;
+    int sum = number2 + number3;
+    int raz = number2 - number3;
+    int um = number2 * number3;
+    cout << "сложение - " << sum << "\n"
+        << "вычитание - " << raz << "\n"
+        << "умножение - " << um << "\n"
+        << "деление int - " << del_int << " деление double - " << del << endl;
 
     return 0;
 }
