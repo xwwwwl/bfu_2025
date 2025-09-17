@@ -12,17 +12,17 @@ int main()
     double number2;
     double number3;
     
-    cout << "char c1 = 'A'; от -128 до 127  1 байт\n"
-        << "unsigned char c2 = 'A'; до 0 до 255 1 байт\n"
-        << "short s1 = -30000; от - 32768 до 37767 2 байта\n"
-        << "unsigned short 60000; = 1 0 до 65535 2 байта;\n"
-        << "int i1; = 1000000 от -2147483648 до 2147483647 4 байта\n"
-        << "unsigned int i2 = 4000000; от 0 до 4294967295 4 байта\n"
-        << "long long ll1 = 2000000; от -9223372036854775808 до 9223372036854775807 8 байтов\n"
-        << "unsigned long long = 1; от 0 до 18446744073709551615 8 байтов\n"
-        << "float f = 3.141444f; примерно от 3,4E–38 до 3,4E+38 4 байта\n"
-        << "double f2 = 3.1343545444f; примерно от 1,7E–308 до 1,7E+308 8 байтов\n"
-        << "bool b = true; false = 0 true = любое кроме 0 true/false 1 байт\n"<< endl;
+    cout << "char c1 = 'A'; от -128 до 127 " <<  sizeof(char) << " байт\n"
+        << "unsigned char c2 = 'A'; до 0 до 255 " << sizeof(unsigned char) << " байт\n"
+        << "short s1 = -30000; от - 32768 до 37767 "<< sizeof(short)<< " байта\n"
+        << "unsigned short 60000; = 1 0 до 65535 "<< sizeof(unsigned short) <<" байта; \n"
+        << "int i1; = 1000000 от -2147483648 до 2147483647 "<< sizeof (int)<<" байта\n"
+        << "unsigned int i2 = 4000000; от 0 до 4294967295 "<< sizeof(unsigned int) <<" байта\n"
+        << "long long ll1 = 2000000; от -9223372036854775808 до 9223372036854775807 "<< sizeof(long long) <<" байтов\n"
+        << "unsigned long long = 1; от 0 до 18446744073709551615 "<< sizeof(unsigned long long) << " байтов\n"
+        << "float f = 3.141444f; примерно от 3,4E–38 до 3,4E+38 "<< sizeof(float) <<" байта\n"
+        << "double f2 = 3.1343545444f; примерно от 1,7E–308 до 1,7E+308 "<< sizeof(double) <<" байтов\n"
+        << "bool b = true; false = 0 true = любое кроме 0 true/false "<< sizeof(bool) <<" байт\n"<< endl;
     cout << "введите значение с клавиатуры: ";
         
     cin >> number;
