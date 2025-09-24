@@ -3,12 +3,72 @@
 
 #include <iostream>
 #include <locale>
+#include <cmath>
 
 
 int main()
 {   
-        
-    return 0;
+    
+    int a;
+    int b;
+    int all_silver_coins;
+    int quantity_of_the_purchased_product;
+    int number_of_bottles = 10;
+
+    std::cin >> a >> b >> quantity_of_the_purchased_product;
+
+    all_silver_coins = a * 100 + b - 50*quantity_of_the_purchased_product;
+    a = ceil(all_silver_coins / 100);
+    b = all_silver_coins - a * 100;
+    number_of_bottles = number_of_bottles - quantity_of_the_purchased_product;
+    
+    std::cout << "у тебя осталось " << a << " золотых монет и " << b << " серебренных монет.\n В магазине осталось " << number_of_bottles << " бутылок с водой.\n Ты купил " << quantity_of_the_purchased_product << " бутылок с водой." << std::endl;
+    //int x;
+    //int y;
+    //std::cin >> x >> y;
+    //std::cout << x <<std::endl<<y; // std::endl перейти на новую строку но он ен только переносит 
+    //                          //на новую строку но и выводит все что есть в буфере выводит в консоль что хорошо для оптимизации
+    //std::cerr << "x-100"; //быстро в консоль выводит но тратит много ресурсов
+    //return 0;
+    // + - * / % ++ --
+    //float f = 10.f / 3.f; // чтобы деление было вещественным нужно чобы число было вещественным 
+    //int i=3;
+    //int i1=10;
+    //float f1 = (i * 1.f) / i1;
+
+    //int k = 10;
+    //k += 10; // -= /= *= %=
+
+    //int i4 = 0;
+    //i4++; // постфиксный инкремент
+    //i4--; //  декремент
+    //++i4; // префиксный инкремент 
+
+    //int j = 0;
+    //std::cout << j++ << std::endl;
+    //int j1 = 0;
+    //std::cout << ++j1 << std::endl;
+    //int q = 3.345f; // будет 3 потомучто тип целочисленный неявное применение типа
+    //int w = (int)3.345f; // явное применение c-style cast
+    //int e = static_cast<int>(3.345f); // явное приведение типа в с++ style шаблон пока целефой тип
+
+    //unsigned short d1 = 50000;
+    //unsigned short d2 = 60000;
+    //unsigned short d3 = d1+d2;
+    //std::cout << d3 << std::endl;
+
+    //int d5 = 0;
+    //int d6 = 10;
+    //int d7 = 10 / 0; // CE
+    //std::cout << d6 / d5 << std::endl; // RE
+    //std::cout << d7 << std::endl; // CE
+    // sqrt, pow, log, tan
+    // ceil, floor, round
+
+    /*const int Nmax = 10;*/
+    
+
+
 }
 
 // Запуск программы: CTRL+F5 или меню "Отладка" > "Запуск без отладки"
