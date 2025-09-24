@@ -1,5 +1,6 @@
-﻿// main.cpp : Этот файл содержит функцию "main". Здесь начинается и заканчивается выполнение программы.
+﻿// p2.cpp : Этот файл содержит функцию "main". Здесь начинается и заканчивается выполнение программы.
 //
+
 
 #include <iostream>
 #include <locale>
@@ -7,69 +8,38 @@
 
 
 int main()
-{   
-    
-    int a;
+{
+    setlocale(LC_ALL, "Russian");
     int b;
-    int all_silver_coins;
-    int quantity_of_the_purchased_product;
+    int a;
     int number_of_bottles = 10;
+    int number_of_bottles_purchased;
 
-    std::cin >> a >> b >> quantity_of_the_purchased_product;
+    std::cout << "золотые монеты: ";
+    std::cin >> a;
+    std::cout << "серебряные монеты: ";
+    std::cin >> b;
+    std::cout << "бутылок купить: ";
+    std::cin >> number_of_bottles_purchased;
 
-    all_silver_coins = a * 100 + b - 50*quantity_of_the_purchased_product;
-    a = ceil(all_silver_coins / 100);
-    b = all_silver_coins - a * 100;
-    number_of_bottles = number_of_bottles - quantity_of_the_purchased_product;
-    
-    std::cout << "у тебя осталось " << a << " золотых монет и " << b << " серебренных монет.\n В магазине осталось " << number_of_bottles << " бутылок с водой.\n Ты купил " << quantity_of_the_purchased_product << " бутылок с водой." << std::endl;
-    //int x;
-    //int y;
-    //std::cin >> x >> y;
-    //std::cout << x <<std::endl<<y; // std::endl перейти на новую строку но он ен только переносит 
-    //                          //на новую строку но и выводит все что есть в буфере выводит в консоль что хорошо для оптимизации
-    //std::cerr << "x-100"; //быстро в консоль выводит но тратит много ресурсов
-    //return 0;
-    // + - * / % ++ --
-    //float f = 10.f / 3.f; // чтобы деление было вещественным нужно чобы число было вещественным 
-    //int i=3;
-    //int i1=10;
-    //float f1 = (i * 1.f) / i1;
+    int all_cilver_coins = a * 100 + b - number_of_bottles_purchased * 50;
+    a = floor(all_cilver_coins / 100);
+    b = all_cilver_coins - a * 100;
+    number_of_bottles = number_of_bottles - number_of_bottles_purchased;
+    std::cout << "У тебя осталось золотых монет: " << a << std::endl
+        << "Серебряных монет: " << b << std::endl
+        << "В магазине осталось бутылок: " << number_of_bottles << std::endl
+        << "Ты купил бутылок: " << number_of_bottles_purchased << std::endl;
 
-    //int k = 10;
-    //k += 10; // -= /= *= %=
+    int number_of_bottles_s_kvadrat = pow(number_of_bottles, 2);
+    int number_of_digits = floor(log10(all_cilver_coins)) + 1;
+    std::cout << "вариант 1" << std::endl
+        << "квадрат количество товара после покупки: " << number_of_bottles_s_kvadrat << std::endl
+        << "количество цифр в оставшихся у покупателя деньгах: " << number_of_digits;
 
-    //int i4 = 0;
-    //i4++; // постфиксный инкремент
-    //i4--; //  декремент
-    //++i4; // префиксный инкремент 
-
-    //int j = 0;
-    //std::cout << j++ << std::endl;
-    //int j1 = 0;
-    //std::cout << ++j1 << std::endl;
-    //int q = 3.345f; // будет 3 потомучто тип целочисленный неявное применение типа
-    //int w = (int)3.345f; // явное применение c-style cast
-    //int e = static_cast<int>(3.345f); // явное приведение типа в с++ style шаблон пока целефой тип
-
-    //unsigned short d1 = 50000;
-    //unsigned short d2 = 60000;
-    //unsigned short d3 = d1+d2;
-    //std::cout << d3 << std::endl;
-
-    //int d5 = 0;
-    //int d6 = 10;
-    //int d7 = 10 / 0; // CE
-    //std::cout << d6 / d5 << std::endl; // RE
-    //std::cout << d7 << std::endl; // CE
-    // sqrt, pow, log, tan
-    // ceil, floor, round
-
-    /*const int Nmax = 10;*/
-    
-
-
+    return 0;
 }
+
 
 // Запуск программы: CTRL+F5 или меню "Отладка" > "Запуск без отладки"
 // Отладка программы: F5 или меню "Отладка" > "Запустить отладку"
