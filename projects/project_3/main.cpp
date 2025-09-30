@@ -154,7 +154,7 @@ int main()
   
             break;
 
-        default: std::cout << "такого товара нет";
+        default: std::cout << "товара с таким номером нет в магазине";
     }
     
     
