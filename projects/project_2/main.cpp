@@ -22,7 +22,14 @@ int main()
     std::cout << "бутылок купить: ";
     std::cin >> number_of_bottles_purchased;
 
-    int all_cilver_coins = a * 100 + b - number_of_bottles_purchased * 50;
+    int all_cilver_coins =  a * 100 + b;
+    int max_count_of_bottle = floor(all_cilver_coins / 50);
+    number_of_bottles_purchased = std::min(number_of_bottles_purchased, max_count_of_bottle);
+    number_of_bottles_purchased = std::min(number_of_bottles_purchased, 10);
+
+    all_cilver_coins = all_cilver_coins - number_of_bottles_purchased * 50;
+
+    
     a = floor(all_cilver_coins / 100);
     b = all_cilver_coins - a * 100;
     number_of_bottles = number_of_bottles - number_of_bottles_purchased;
@@ -31,12 +38,36 @@ int main()
         << "В магазине осталось бутылок: " << number_of_bottles << std::endl
         << "Ты купил бутылок: " << number_of_bottles_purchased << std::endl;
 
-    int number_of_bottles_s_kvadrat = pow(number_of_bottles, 2);
-    int number_of_digits = floor(log10(all_cilver_coins)) + 1;
-    std::cout << "вариант 1" << std::endl
-        << "квадрат количество товара после покупки: " << number_of_bottles_s_kvadrat << std::endl
-        << "количество цифр в оставшихся у покупателя деньгах: " << number_of_digits;
+    all_cilver_coins = a * 100 + b;
+    int max_length_all_cilver_coins = floor(log10(all_cilver_coins))+1;
 
+    std::cout << "вариант 2" << std::endl;
+
+    int reverse_all_cilver_coins = 0;
+    std::cout << all_cilver_coins % 10;
+    all_cilver_coins = floor(all_cilver_coins / 10);
+    reverse_all_cilver_coins = all_cilver_coins % 10;
+    all_cilver_coins = floor(all_cilver_coins / 10);
+    reverse_all_cilver_coins = 10* reverse_all_cilver_coins + all_cilver_coins%10;
+    all_cilver_coins = floor(all_cilver_coins / 10);
+    reverse_all_cilver_coins = 10 * reverse_all_cilver_coins + all_cilver_coins % 10;
+    all_cilver_coins = floor(all_cilver_coins / 10);
+    reverse_all_cilver_coins = 10 * reverse_all_cilver_coins + all_cilver_coins % 10;
+    all_cilver_coins = floor(all_cilver_coins / 10);
+    reverse_all_cilver_coins = 10 * reverse_all_cilver_coins + all_cilver_coins % 10;
+    all_cilver_coins = floor(all_cilver_coins / 10);
+    reverse_all_cilver_coins = 10 * reverse_all_cilver_coins + all_cilver_coins % 10;
+    all_cilver_coins = floor(all_cilver_coins / 10);
+    reverse_all_cilver_coins = 10 * reverse_all_cilver_coins + all_cilver_coins % 10;
+    all_cilver_coins = floor(all_cilver_coins / 10);
+    reverse_all_cilver_coins = 10 * reverse_all_cilver_coins + all_cilver_coins % 10;
+    all_cilver_coins = floor(all_cilver_coins / 10);
+    reverse_all_cilver_coins = floor(reverse_all_cilver_coins / pow(10,9-max_length_all_cilver_coins));
+
+
+    
+    std::cout << reverse_all_cilver_coins;
+        
     return 0;
 }
 
