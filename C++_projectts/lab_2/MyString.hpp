@@ -11,10 +11,10 @@ public:
     MyString& operator=(const MyString& other);
     friend MyString operator+(const MyString& str1, const MyString& str2);
     friend std::ostream& operator<<(std::ostream& os, const MyString& str);
-private:    
+private: 
     size_t size_;
     char* str_;
-    // size_t capacity;
+    
 };
 }
     
