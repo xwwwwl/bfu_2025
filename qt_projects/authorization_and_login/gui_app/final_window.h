@@ -2,8 +2,8 @@
 #define FINAL_WINDOW_H
 
 #include <QWidget>
-#include "user_class.h"
-#include "photooperation.h"
+#include "classes/user_class.h"
+#include "classes/photooperation.h"
 
 namespace Ui {
 class final_window;

@@ -12,17 +12,7 @@ public:
     QString write_user_info(QStringList All_Lines,  QString filepath);
 };
 
-class UserFileHandler : public FileHandler
-{
-private:
-    User user_;
-public:
-    UserFileHandler(User user);
-    QString get_path_to_user_avatar();
-    QVector<QString> get_vector_to_user_photo();
 
-
-};
 
 // class PhotoFileHandler : public FileHandler
 

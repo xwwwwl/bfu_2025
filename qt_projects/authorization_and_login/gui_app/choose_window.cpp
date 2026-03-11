@@ -1,9 +1,11 @@
 #include "choose_window.h"
 #include "ui_choose_window.h"
-#include "filehandler.h"
+#include "classes/delete_photo.h"
+#include "classes/set_avatar_photo.h"
+#include "classes/func.h"
+#include "classes/user_file_handler.h"
 #include <QVector>
 #include "logger.hpp"
-#include "func.h"
 #include <QPushButton>
 #include <QWidget>
 #include <QTimer>

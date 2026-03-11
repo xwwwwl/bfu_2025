@@ -27,13 +27,26 @@ if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
         authorization_window.h authorization_window.cpp authorization_window.ui
         final_window.h final_window.cpp final_window.ui
         photo.qrc
-        user_class.cpp
-        user_class.h
-        filehandler.h filehandler.cpp
 
-        func.h func.cpp
+
+
+
+
         choose_window.h choose_window.cpp choose_window.ui
-        photooperation.h photooperation.cpp
+
+        classes/filehandler.cpp classes/filehandler.h
+
+
+        classes/photooperation.h classes/photooperation.cpp
+
+
+        classes/user_class.h classes/user_class.cpp
+        classes/func.h classes/func.cpp
+        classes/user_file_handler.h classes/user_file_handler.cpp
+        classes/photo_file_handler.h classes/photo_file_handler.cpp
+        classes/upload_photo.h classes/upload_photo.cpp
+        classes/delete_photo.h classes/delete_photo.cpp
+        classes/set_avatar_photo.h classes/set_avatar_photo.cpp
     )
 # Define target properties for Android with Qt 6 as:
 #    set_property(TARGET gui_app APPEND PROPERTY QT_ANDROID_PACKAGE_SOURCE_DIR

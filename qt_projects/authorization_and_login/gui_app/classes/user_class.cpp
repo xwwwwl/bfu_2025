@@ -6,6 +6,7 @@
 #include "user_class.h"
 #include <QRandomGenerator>
 #include "func.h"
+
 User::User(QString login,QString password, QString filepath)
     :login_(login), password_(password), filepath_(filepath) {}
 
@@ -142,7 +143,6 @@ QString User::get_filepath(){
 QString User::get_password(){
     return password_;
 }
-
 
 
 
