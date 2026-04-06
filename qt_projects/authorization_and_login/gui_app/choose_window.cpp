@@ -49,13 +49,10 @@ choose_window::choose_window(QWidget *parent, QString login, PhotoOperation* upl
 
     }
     for (auto* btn : photos) {
-        btn->installEventFilter(this);  // <- ДОБАВЬТЕ ЭТО
+        btn->installEventFilter(this);  //
     }
 
     group->setExclusive(true);
-
-
-
 
 
 

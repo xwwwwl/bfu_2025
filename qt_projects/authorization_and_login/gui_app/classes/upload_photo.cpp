@@ -1,17 +1,18 @@
 #include "upload_photo.h"
 #include <QString>
-#include "filehandler.h"
 #include "QJsonObject"
 #include "QCoreApplication"
 #include "func.h"
 #include "logger.hpp"
-#include "photo_file_handler.h"
+#include <QDateTime>
+#include <QImageReader>
 
-QString UploadPhoto::execute(User* user, const QString& photoPath)
+UploadPhoto::UploadPhoto(PhotoFileHandler photo_file_handler,UserFileHandler user_file_handler) : photo_file_handler_(photo_file_handler), user_file_handler_(user_file_handler){}
+
+QString UploadPhoto::execute(QString login, const QString& photoPath)
 {
     QString folder_filepath = find_path(QCoreApplication::applicationFilePath(),"photos");
-    FileHandler file_handler;
-    QVector<QVariant> user_info= file_handler.find_user(user->get_login(),user->get_filepath());
+    QVector<QVariant> user_info= user_file_handler_.find_user(login);
     bool userFound = false;
     bool photoAdded = false;
     if (!user_info.isEmpty()){
@@ -32,19 +33,35 @@ QString UploadPhoto::execute(User* user, const QString& photoPath)
         for (int i = 0; i < photos.size(); i++) {
             if (photos[i] == "plug") {
 
-                QFileInfo photoInfo(photoPath);
-                QString newFileName = photoInfo.fileName();
-                QString newPhotoPath = folder_filepath + "/" + user->get_login()+"_"+newFileName;
-                if (photo_1 == newPhotoPath or photo_2 == newPhotoPath or photo_3 == newPhotoPath or photo_4 == newPhotoPath){
-                    LOG_ERROR("нелья добавлять одинаковые кариинки");
-                    return "нелья добавлять одинаковые изображения";
-                }
-                if (photo_file_handler::CopyPhoto(photoPath,newPhotoPath)){
+                QDateTime now = QDateTime::currentDateTime();
+                QString now_milisec = QString::number(now.toMSecsSinceEpoch());
+                QString time_upload_photo = now.toString("yyyyMMdd");
+                QString year_upload_photo = time_upload_photo.left(4);
+                QString mounth_upload_photo = time_upload_photo.mid(4,2);
+                QString day_upload_photo = time_upload_photo.mid(6,2);
+
+                QString user_folder = folder_filepath + "/"+ login;
+                QString user_year_folder =user_folder + "/"+ year_upload_photo;
+                QString user_mounth_folder = user_year_folder + "/"+ mounth_upload_photo;
+                QString user_day_folder = user_mounth_folder + "/"+ day_upload_photo;
+
+                photo_file_handler_.create_folder(user_folder);
+                photo_file_handler_.create_folder(user_year_folder);
+                photo_file_handler_.create_folder(user_mounth_folder);
+                photo_file_handler_.create_folder(user_day_folder);
+
+                // QImageReader photo_reader(photoPath);
+                // QByteArray photo_format = photo_reader.format();
+
+                // QString newPhotoPath = user_day_folder+"/"+now_milisec+"."+QString(photo_format);
+                QString newPhotoPath = user_day_folder+"/"+now_milisec+".png";
+                LOG_INFO(newPhotoPath);
+                if (photo_file_handler_.CopyPhoto(photoPath,newPhotoPath)){
                     user_Json[QString("photo_%1").arg(i + 1)] = newPhotoPath;
                     photoAdded = true;
                     allLines[lineIndex] = QString(QJsonDocument(user_Json).toJson(QJsonDocument::Compact));
                     LOG_INFO(QString("Фото добавлено на позицию %1: %2")
-                                 .arg(i + 1).arg(newFileName));
+                                 .arg(i + 1).arg(newPhotoPath));
                     break;
                 }
                 else{
@@ -54,14 +71,14 @@ QString UploadPhoto::execute(User* user, const QString& photoPath)
         }
 
         if (!userFound) {
-            LOG_INFO("Пользователь с логином: " + user->get_login() + " не найдено");
-            return "Пользователь с логином: " + user->get_login() + " не найдено";
+            LOG_INFO("Пользователь с логином: " + login + " не найдено");
+            return "Пользователь с логином: " + login + " не найдено";
         }
         if (!photoAdded) {
             LOG_ERROR("Не удалось добавить фото");
             return "Не удалось добавить фото";
         }
-        QString error_write_file = file_handler.write_user_info(allLines,user->get_filepath());
+        QString error_write_file = user_file_handler_.write_user_info(allLines);
         return error_write_file;
 
     }

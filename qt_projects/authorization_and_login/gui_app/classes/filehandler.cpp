@@ -7,59 +7,28 @@
 #include <QVector>
 #include <QFileDialog>
 #include <QVariant>
-
+#include <QDir>
 
 FileHandler::FileHandler() {}
 
-QVector<QVariant> FileHandler::find_user(QString login, QString filepath){
-    QString path_to_user_avatar;
-    QFile file(filepath);
+QString FileHandler::path_to_data(QString path){
 
 
-    if (!file.open(QIODevice::ReadOnly)) {
-        LOG_INFO("Не удалось открыть файл");
-    }
-
-    QStringList allLines;
-    QTextStream readStream(&file);
-
-    while (!readStream.atEnd()) {
-        allLines.append(readStream.readLine());
-    }
-    file.close();
-    for (int i =0;i<allLines.length();i++){
-        QJsonDocument doc=QJsonDocument::fromJson(allLines[i].toUtf8());
-        QJsonObject Jobj = doc.object();
-        if (Jobj["login"].toString()==login)
-        {
-            QVector<QVariant> list = {Jobj, i, allLines};
-            return list;
-        }
-
-    }
-    QVector<QVariant> list;
-    return list;
+    QString current_filepath_str = QDir::currentPath();
+    int pos = current_filepath_str.indexOf("authorization_and_login");
+    QString main_folder_path = current_filepath_str.left(pos+QString("authorization_and_login").length());
+    QString filepath = QDir(main_folder_path).filePath(path);
+    return filepath;
 
 }
 
-QString FileHandler::write_user_info(QStringList All_Lines,  QString filepath){
-    QFile file(filepath);
-    if (!file.open(QIODevice::WriteOnly | QIODevice::Truncate)) {
-        LOG_INFO("Не удалось открыть файл для записи");
-        return "Не удалось открыть файл для записи";
+void FileHandler::create_folder(QString folder_name){
+    QDir dir(folder_name);
+    if (!dir.exists()) {
+        dir.mkpath(".");
+        LOG_INFO("Папка photos создана впервые");
+
+    } else {
+        LOG_INFO("Папка photos уже существует, используем существующие фото");
     }
-    QTextStream writeStream(&file);
-    for (const QString& line :All_Lines) {
-        writeStream << line << "\n";
-    }
-    file.close();
-    LOG_INFO("Фото успешно загружено");
-    return "файл успешно записан";
 }
-
-
-
-
-
-
-

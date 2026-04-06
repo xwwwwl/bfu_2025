@@ -2,8 +2,7 @@
 #include "ui_registration_window.h"
 #include "logger.hpp"
 #include "mainwindow.h"
-#include "classes/user_class.h"
-#include "func.h"
+#include "classes/func.h"
 #include <QRandomGenerator>
 #include <QDebug>
 #include "classes/func.h"

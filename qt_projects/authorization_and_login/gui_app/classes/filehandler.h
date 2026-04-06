@@ -1,15 +1,17 @@
+
 #ifndef FILEHANDLER_H
 #define FILEHANDLER_H
 
 #include <QString>
-#include "user_class.h"
 #include "QVector"
-class FileHandler
+    class FileHandler
 {
 public:
     FileHandler();
-    QVector<QVariant> find_user(QString login, QString filepath);
-    QString write_user_info(QStringList All_Lines,  QString filepath);
+    QString path_to_data(QString path);
+    void create_folder(QString folder_name);
+    // проверить существования файла,
+
 };
 
 

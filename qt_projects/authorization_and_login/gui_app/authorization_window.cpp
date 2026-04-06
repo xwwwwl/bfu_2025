@@ -2,7 +2,7 @@
 #include "ui_authorization_window.h"
 #include "mainwindow.h"
 #include "logger.hpp"
-#include "classes/user_class.h"
+#include <QJsonObject>
 #include <QDebug>
 #include "final_window.h"
 #include "classes/func.h"

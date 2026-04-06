@@ -1,11 +1,10 @@
 #include "set_avatar_photo.h"
-#include "filehandler.h"
 #include "QJsonObject"
+SetAvatarPhoto::SetAvatarPhoto(UserFileHandler user_file_handler) : user_file_handler_(user_file_handler){}
 
-QString SetAvatarPhoto::execute(User* user, const QString& photoPath){
+QString SetAvatarPhoto::execute(QString login, const QString& photoPath){
 
-    FileHandler file_handler;
-    QVector<QVariant> user_info= file_handler.find_user(user->get_login(),user->get_filepath());
+    QVector<QVariant> user_info= user_file_handler_.find_user(login);
     if (!user_info.isEmpty()){
         QJsonObject user_json=user_info[0].toJsonObject();
         int lineIndex= user_info[1].toInt();
@@ -14,7 +13,7 @@ QString SetAvatarPhoto::execute(User* user, const QString& photoPath){
             if (user_json[QString("photo_%1").arg(i+1)].toString() == photoPath){
                 user_json["avatar"] = QString("photo_%1").arg(i+1);
                 allLines[lineIndex] = QString(QJsonDocument(user_json).toJson(QJsonDocument::Compact));
-                QString error_write_file = file_handler.write_user_info(allLines,user->get_filepath());
+                QString error_write_file = user_file_handler_.write_user_info(allLines);
                 return error_write_file;
             }
         }

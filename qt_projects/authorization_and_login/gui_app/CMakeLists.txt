@@ -40,7 +40,7 @@ if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
         classes/photooperation.h classes/photooperation.cpp
 
 
-        classes/user_class.h classes/user_class.cpp
+
         classes/func.h classes/func.cpp
         classes/user_file_handler.h classes/user_file_handler.cpp
         classes/photo_file_handler.h classes/photo_file_handler.cpp
