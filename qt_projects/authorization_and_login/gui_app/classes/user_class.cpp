@@ -6,6 +6,7 @@
 #include "user_class.h"
 #include <QRandomGenerator>
 #include "func.h"
+
 User::User(QString login,QString password, QString filepath)
     :login_(login), password_(password), filepath_(filepath) {}
 
@@ -122,14 +123,7 @@ int getLastId(const QString& filePath) {
     return QJsonDocument::fromJson(lastLine.toUtf8()).object()["id"].toInt();
 }
 
-bool password_check(QString password, QString alphabet){
-    for (QChar c : password){
-        if(!alphabet.contains(c)){
-            return false;
-        }
-    }
-    return true;
-}
+
 
 QString User::get_login(){
     return login_;
@@ -142,7 +136,6 @@ QString User::get_filepath(){
 QString User::get_password(){
     return password_;
 }
-
 
 
 

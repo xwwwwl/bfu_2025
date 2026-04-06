@@ -2,20 +2,24 @@
 #include "ui_authorization_window.h"
 #include "mainwindow.h"
 #include "logger.hpp"
-#include "user_class.h"
+#include <QJsonObject>
 #include <QDebug>
 #include "final_window.h"
-#include "func.h"
+#include "classes/func.h"
 
 
-authorization_window::authorization_window(QWidget *parent)
+
+authorization_window::authorization_window(QWidget *parent, PhotoOperation* upload_photo, PhotoOperation* delete_photo, PhotoOperation* set_avatar_photo,UserFileHandler user_file_handler)
     : QWidget(parent)
     , ui(new Ui::authorization_window)
+    , upload_photo_(upload_photo)
+    , delete_photo_(delete_photo)
+    , set_avatar_photo_(set_avatar_photo)
+    , user_file_handler_(user_file_handler)
 {
     ui->setupUi(this);
-    ui->Error_password->setVisible(false);
-    ui->Error_registration->setVisible(false);
-    ui->you_not_regist->setVisible(false);
+    ui->Error_screen->setText("");
+
     LOG_INFO("вы создали окно авторизации");
 }
 
@@ -27,7 +31,7 @@ authorization_window::~authorization_window()
 void authorization_window::on_back_to_mainwindow_clicked()
 {
 
-    MainWindow *mainwindow_1 = new MainWindow();
+    MainWindow *mainwindow_1 = new MainWindow(nullptr, 0,upload_photo_,delete_photo_,set_avatar_photo_,user_file_handler_);
     mainwindow_1->show();
     mainwindow_1->setAttribute(Qt::WA_DeleteOnClose);
     this->close();
@@ -39,30 +43,28 @@ void authorization_window::on_authorization_button_clicked()
 {
     QString login = ui->login_authorization->text();
     QString password = ui->password_authorization->text();
-    QString file_path =find_path(QCoreApplication::applicationDirPath(),"password.jsonl");
-    User current_user(login,password,file_path);
 
     if (login.startsWith(" ")){
         LOG_INFO("Логин не может начинаться с пробела");
+        ui->Error_screen->setText("логин не может начинаться с пробела");
         return;
     }
-    QFile file(file_path);
+    QVector<QVariant> user_information = user_file_handler_.find_user(login);
 
-    if (!file.open(QIODevice::QIODevice::ReadOnly)) {
-        LOG_INFO("Не удалось открыть файл");
-        return ;
-    }
-
-    if (current_user.user_check())
+    if (!user_information.empty())
     {
-        final_window *final_window_1 = new final_window(nullptr,current_user);
-        final_window_1->show();
-        final_window_1->setAttribute(Qt::WA_DeleteOnClose);
-        this->close();
-        return;
+        QJsonObject user_json = user_information[0].toJsonObject();
+        if (user_file_handler_.user_check(login,password, user_json)){
+            final_window *final_window_1 = new final_window(nullptr,login,upload_photo_,delete_photo_,set_avatar_photo_, user_file_handler_);
+            final_window_1->show();
+            final_window_1->setAttribute(Qt::WA_DeleteOnClose);
+            this->close();
+            return;
         }
 
-    ui->you_not_regist->setVisible(true);
+        }
+
+    ui->Error_screen->setText("логин или пароль написаны не верно");
 
 
 }
@@ -70,8 +72,9 @@ void authorization_window::on_authorization_button_clicked()
 
 void authorization_window::on_password_authorization_textChanged(const QString &arg1)
 {
-    ui->you_not_regist->setVisible(false);
-    ui->Error_password->setVisible(false);
+    if (error_flag_log ==false and error_flag_pas == false){
+        ui->Error_screen->setText("");
+    }
 
     QString alphabet = "qwertyuiopasdfghjklzxcvbnmQWERTYUIOPASDFGHJKLZXCVBNM1234567890:;<=>?@^%'";
     QString password =ui->password_authorization->text();
@@ -83,36 +86,41 @@ void authorization_window::on_password_authorization_textChanged(const QString &
             "QLineEdit { border: 1px solid #B00000; "
             "   border-radius: 3px;}"
             );
-        ui->Error_password->setVisible(true);
+        error_flag_pas=true;
+        ui->Error_screen->setText("недопустимые символы");
     }
     else{
         ui->password_authorization->setStyleSheet(
             "QLineEdit { border: 1px solid palette(mid); "
             "border-radius: 3px;}"
             );
-        ui->Error_password->setVisible(false);
+        error_flag_pas=false;
+
     }
 }
 
 
 void authorization_window::on_login_authorization_textChanged(const QString &arg1)
 {
-    ui->Error_registration->setVisible(false);
-    ui->you_not_regist->setVisible(false);
+    if (error_flag_log ==false and error_flag_pas == false){
+        ui->Error_screen->setText("");
+    }
     QString login =ui->login_authorization->text();
     if (login.startsWith(" ")){
         ui->login_authorization->setStyleSheet(
             "QLineEdit { border: 1px solid #B00000; "
             "   border-radius: 3px;}"
             );
-        ui->Error_registration->setVisible(true);
+        ui->Error_screen->setText("логин не может начинаться с пробела");
+        error_flag_log=true;
     }
     else{
         ui->login_authorization->setStyleSheet(
             "QLineEdit { border: 1px solid palette(mid); "
             "border-radius: 3px;}"
             );
-        ui->Error_password->setVisible(false);
+        error_flag_log=false;
+
     }
 }
 

@@ -23,7 +23,7 @@ public:
 
 
 int getLastId(const QString& filePath);
-bool password_check(QString password, QString alphabet);
+;
 
 
 #endif // USER_CLASS_H

@@ -2,8 +2,11 @@
 #define FINAL_WINDOW_H
 
 #include <QWidget>
-#include "user_class.h"
-#include "photooperation.h"
+#include "classes/user_class.h"
+#include "classes/photo_file_handler.h"
+#include "classes/user_file_handler.h"
+
+#include "classes/photooperation.h"
 
 namespace Ui {
 class final_window;
@@ -14,7 +17,7 @@ class final_window : public QWidget
     Q_OBJECT
 
 public:
-    explicit final_window(QWidget *parent = nullptr, User user = defaultUser());
+    explicit final_window(QWidget *parent = nullptr, QString login = "", PhotoOperation* upload_photo = nullptr, PhotoOperation* delete_photo = nullptr, PhotoOperation* set_avatar_photo = nullptr, UserFileHandler user_file_handler= UserFileHandler(""));
     ~final_window();
 
 private slots:
@@ -25,11 +28,11 @@ private slots:
     void on_back_to_mainwindow_clicked();
 
 private:
-    static User defaultUser() {
-        return User("", "", "");
-    }
-    PhotoOperation*  upload_photo;
+    UserFileHandler user_file_handler_;
+    QString login_;
+    PhotoOperation* upload_photo_;
+    PhotoOperation* delete_photo_;
+    PhotoOperation* set_avatar_photo_;
     Ui::final_window *ui;
-    User user_;
 };
 #endif // FINAL_WINDOW_H

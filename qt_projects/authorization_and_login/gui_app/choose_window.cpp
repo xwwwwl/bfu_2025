@@ -1,195 +1,209 @@
 #include "choose_window.h"
 #include "ui_choose_window.h"
-#include "filehandler.h"
+#include "classes/func.h"
+#include "classes/user_file_handler.h"
 #include <QVector>
 #include "logger.hpp"
-#include "func.h"
 #include <QPushButton>
 #include <QWidget>
 #include <QTimer>
 #include "final_window.h"
+#include <QJsonObject>
 
-choose_window::choose_window(QWidget *parent, User user)
+
+choose_window::choose_window(QWidget *parent, QString login, PhotoOperation* upload_photo, PhotoOperation* delete_photo, PhotoOperation* set_avatar_photo,UserFileHandler user_file_handler)
     : QWidget(parent)
     , ui(new Ui::choose_window)
-    , user_(user)
-    , delete_photo(new DeletePhoto)
-    , set_avatar_photo(new SetAvatarPhoto)
+    , login_(login)
+    , upload_photo_(upload_photo)
+    , delete_photo_(delete_photo)
+    , set_avatar_photo_(set_avatar_photo)
+    , user_file_handler_(user_file_handler)
 {
     ui->setupUi(this);
     ui->error_label->setVisible(false);
 
-    photos = {ui->photo_1, ui->photo_2, ui->photo_3, ui->photo_4};
-    UserFileHandler user_file(user_);
+    photos = {ui->photo_1_btn, ui->photo_2_btn, ui->photo_3_btn, ui->photo_4_btn};
     defoalt_avatar_file_path = find_path(QCoreApplication::applicationFilePath(),"user_img.png");
-
-    user_photo_path = user_file.get_vector_to_user_photo();
-
-    for (int i = 0; i < user_photo_path.size(); i++) {
-        if (user_photo_path[i] == "") {
-            LOG_ERROR(QString("картинка %1 не загружена").arg(i + 1));
+    QVector<QVariant> user_information = user_file_handler_.find_user(login_);
+    QJsonObject json_user = user_information[0].toJsonObject();
+    user_photo_path = user_file_handler_.get_vector_to_user_photo(json_user);
+    for (int i=0; i<user_photo_path.length(); i++){
+        group->addButton(photos[i]);
+        QString photopath = user_photo_path[i];
+        if (photopath == "plug") {
+            photos[i]->setIcon(QIcon(defoalt_avatar_file_path));
+        }
+        else if(photopath == "") {
+            LOG_ERROR("не удалось найти фото");
             return;
         }
-        else if (user_photo_path[i] == "plug") {
-            user_photo_path[i] = defoalt_avatar_file_path;
-
-        }
-    for (int i = 0; i < user_photo_path.size(); i++) {
-
-        photos[i]->setPixmap(QPixmap(user_photo_path[i]));
-    }
-    }
-        for (int i=0;i<photos.size();i++){
-        QPushButton *btn = new QPushButton(photos[i]);
-        btn->resize(photos[i]->width(), photos[i]->height());
-        btn->setStyleSheet(
-            "QPushButton {"
-            "    border: 1px solid gray;"
-            "    border-radius: 0px;"
-            "    background-color: transparent;"
-            "}"
-            );
-        connect(btn, &QPushButton::pressed, this, [this,i]() {
-            onPhotoPressed(i);
-        });
-        connect(btn, &QPushButton::released, this, [this,i]() {
-            onPhotoReleased(i);
-        });
-        photo_buttons.append(btn);
+        else {
+            photos[i]->setIcon(QIcon(photopath));
         }
 
+        photos[i]->setStyleSheet("QPushButton::checked { border: 3px solid green; }" );
+        photos[i]->setIconSize(QSize(120, 120));
 
-}
-void choose_window::onPhotoPressed(int photoNumber)
-{
-    ui->error_label->setVisible(false);
-
-    photo_buttons[photoNumber]->setStyleSheet(
-        "QPushButton {"
-        "    border: 1px solid gray;"
-        "    border-radius: 0px;"
-        "    background-color: rgba(255, 255, 255, 100);"
-        "}"
-        );
-}
-void choose_window::onPhotoReleased(int photoNumber){
-    photo_buttons[photoNumber]->setStyleSheet(
-        "QPushButton {"
-        "    border: 1px solid gray;"
-        "    border-radius: 0px;"
-        "    background-color: transparent;"
-        "}"
-        );
-    photo_delete_or_avatar_path= user_photo_path[photoNumber];
-    if (photo_delete_or_avatar_path==defoalt_avatar_file_path){
-        photo_delete_or_avatar_path="plug";
     }
-    LOG_INFO(photo_delete_or_avatar_path);
+    for (auto* btn : photos) {
+        btn->installEventFilter(this);  // <- ДОБАВЬТЕ ЭТО
+    }
+
+    group->setExclusive(true);
+
+
+
+
+
 
 }
+
 
 choose_window::~choose_window()
 {
     delete ui;
-    delete delete_photo;
-    delete set_avatar_photo;
-}
 
+}
+bool choose_window::eventFilter(QObject* watched, QEvent* event)
+{
+    for (int i=0; i<user_photo_path.length(); i++){
+        QString photopath = user_photo_path[i];
+        if (photopath != "plug") {
+             photos[i]->setIcon(QIcon(photopath));
+        }
+
+    }
+        for (auto* btn : photos) {
+            int w = btn->width();
+            int h = btn->height();
+            int minimal_w_h = std::min(w,h);
+            btn->resize(minimal_w_h, minimal_w_h);
+            btn->setIconSize(QSize(static_cast<int>(minimal_w_h * 0.95),
+                                   static_cast<int>(minimal_w_h * 0.95)));
+            btn->update();
+
+        }
+
+    return QWidget::eventFilter(watched, event);
+}
 void choose_window::on_set_avatar_btn_clicked()
 {
-    if (photo_delete_or_avatar_path!=""){
-        QString error_label_str = set_avatar_photo->execute(&user_, photo_delete_or_avatar_path);
-        if (error_label_str=="файл успешно записан"){
-            ui->error_label->setText("изображение аватара успешно обновлено");
-            ui->error_label->setStyleSheet(
-                "QLabel {"
-                "color: #32CD32;"
-                "}"
-                );
-            ui->error_label->setVisible(true);
-        }
-        else{
-            ui->error_label->setText(error_label_str);
-            ui->error_label->setStyleSheet(
-                "QLabel {"
-                "color: #B00000;"
-                "}"
-                );
-            ui->error_label->setVisible(true);
+    for (int i=0; i<user_photo_path.length(); i++){
+        if (photos[i]->isChecked()){
+            QString user_photopath =user_photo_path[i];
+            QString error_label_str = set_avatar_photo_->execute(login_, user_photopath);
+            if (error_label_str=="файл успешно записан"){
+                ui->error_label->setText("изображение аватара успешно обновлено");
+                ui->error_label->setStyleSheet(
+                    "QLabel {"
+                    "color: #32CD32;"
+                    "}"
+                    );
+                ui->error_label->setVisible(true);
+                return;
+            }
+            else{
+                ui->error_label->setText(error_label_str);
+                ui->error_label->setStyleSheet(
+                    "QLabel {"
+                    "color: #B00000;"
+                    "}"
+                    );
+                ui->error_label->setVisible(true);
+                return;
+            }
         }
     }
-    else{
-        ui->error_label->setText("выберете картинку");
-        ui->error_label->setStyleSheet(
-            "QLabel {"
-            "color: #B00000;"
-            "}"
-            );
-        ui->error_label->setVisible(true);
-        LOG_ERROR("выбери картинку");
+    ui->error_label->setText("выберите картинку");
+    ui->error_label->setStyleSheet(
+        "QLabel {"
+        "color: #B00000;"
+        "}"
+        );
+    ui->error_label->setVisible(true);
+    LOG_ERROR("выбери картинку");
     }
 
-}
+
 
 
 void choose_window::on_delete_photo_btn_clicked()
 {
+    for (int i=0; i<user_photo_path.length(); i++){
+        if (photos[i]->isChecked()){
+            QString user_photopath =user_photo_path[i];
+            QString error_label_str = delete_photo_->execute(login_, user_photopath);
+            if (error_label_str=="файл успешно записан"){
+                ui->error_label->setText("фото успешно удалено");
+                ui->error_label->setStyleSheet(
+                    "QLabel {"
+                    "color: #32CD32;"
+                    "}"
+                    );
+                ui->error_label->setVisible(true);
+                QVector<QVariant> user_information = user_file_handler_.find_user(login_);
+                QJsonObject json_user = user_information[0].toJsonObject();
+                user_photo_path = user_file_handler_.get_vector_to_user_photo(json_user);
+                for (int i=0; i<user_photo_path.length(); i++){
+                    QString photopath = user_photo_path[i];
+                    if (photopath == "plug") {
+                        photos[i]->setIcon(QIcon(defoalt_avatar_file_path));
+                    }
+                    else if(photopath == "") {
+                        LOG_ERROR("не удалось найти фото");
+                        return;
+                    }
+                    else {
+                        photos[i]->setIcon(QIcon(photopath));
+                    }
 
-    if (photo_delete_or_avatar_path!=""){
 
-        UserFileHandler user_file(user_);
-        QString error_label_str = delete_photo->execute(&user_, photo_delete_or_avatar_path);
-        if (error_label_str=="файл успешно записан"){
-            ui->error_label->setText("фото успешно удалено");
-            ui->error_label->setStyleSheet(
-                "QLabel {"
-                "color: #32CD32;"
-                "}"
-                );
-            ui->error_label->setVisible(true);
-        }
-        else{
-            ui->error_label->setText(error_label_str);
-            ui->error_label->setStyleSheet(
-                "QLabel {"
-                "color: #B00000;"
-                "}"
-                );
-            ui->error_label->setVisible(true);
-        }
-        user_photo_path = user_file.get_vector_to_user_photo();
 
-        for (int i = 0; i < user_photo_path.size(); i++) {
-            if (user_photo_path[i] == "") {
-                LOG_ERROR(QString("картинка %1 не загружена").arg(i + 1));
-                return;
+                    }
+                for (auto* btn : photos) {
+                        int w = btn->width();
+                        int h = btn->height();
+                        int minimal_w_h = std::min(w,h);
+                        btn->resize(minimal_w_h, minimal_w_h);
+                        btn->setIconSize(QSize(static_cast<int>(minimal_w_h * 0.95),
+                                               static_cast<int>(minimal_w_h * 0.95)));
+                        btn->update();
+
+                }
+                return ;
             }
-            else if (user_photo_path[i] == "plug") {
-                user_photo_path[i] = defoalt_avatar_file_path;
-
+            else{
+                ui->error_label->setText(error_label_str);
+                ui->error_label->setStyleSheet(
+                    "QLabel {"
+                    "color: #B00000;"
+                    "}"
+                    );
+                ui->error_label->setVisible(true);
+                return ;
             }
-        for (int i = 0; i < user_photo_path.size(); i++) {
-
-                photos[i]->setPixmap(QPixmap(user_photo_path[i]));
-        }
         }
     }
-    else{
-        ui->error_label->setText("выберете картинку");
-        ui->error_label->setStyleSheet(
-            "QLabel {"
-            "color: #B00000;"
-            "}"
-            );
-        ui->error_label->setVisible(true);
-        LOG_ERROR("выбери картинку");
-    }
+
+
+
+    ui->error_label->setText("выберите картинку");
+    ui->error_label->setStyleSheet(
+        "QLabel {"
+        "color: #B00000;"
+        "}"
+        );
+    ui->error_label->setVisible(true);
+    LOG_ERROR("выбери картинку");
+
 }
 
 
 void choose_window::on_back_to_mainwindow_clicked()
 {
-    final_window* final_window_1 = new final_window(nullptr, user_);
+
+    final_window* final_window_1 = new final_window(nullptr, login_, upload_photo_,delete_photo_,set_avatar_photo_, user_file_handler_);
     final_window_1->show();
     this->close();
 }
