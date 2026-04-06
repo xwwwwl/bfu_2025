@@ -2,11 +2,11 @@
 #include "ui_final_window.h"
 #include "classes/user_file_handler.h"
 #include "func.h"
+#include "classes/upload_photo.h"
 #include <QFileDialog>
 #include "choose_window.h"
 #include "mainwindow.h"
 #include "classes/photooperation.h"
-#include <QJsonObject>
 
 
 

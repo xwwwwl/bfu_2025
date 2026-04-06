@@ -1,5 +1,7 @@
 #include "choose_window.h"
 #include "ui_choose_window.h"
+#include "classes/delete_photo.h"
+#include "classes/set_avatar_photo.h"
 #include "classes/func.h"
 #include "classes/user_file_handler.h"
 #include <QVector>

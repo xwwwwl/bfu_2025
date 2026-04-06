@@ -27,12 +27,3 @@ QString encoder(QString password, int key){
     }
     return new_password;
 }
-
-bool password_check(QString password, QString alphabet){
-    for (QChar c : password){
-        if(!alphabet.contains(c)){
-            return false;
-        }
-    }
-    return true;
-}

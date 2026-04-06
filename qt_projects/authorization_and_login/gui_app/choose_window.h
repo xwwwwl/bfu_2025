@@ -2,13 +2,10 @@
 #define CHOOSE_WINDOW_H
 
 #include <QWidget>
+#include "classes/user_class.h"
 #include <QPushButton>
-#include <QPushButton>
-#include <QJsonObject>
+#include <QLabel>
 #include "classes/photooperation.h"
-#include "classes/user_file_handler.h"
-#include <QButtonGroup>
-
 namespace Ui {
 class choose_window;
 }
